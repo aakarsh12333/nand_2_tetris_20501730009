@@ -1,11 +1,10 @@
+// 4-way multiplexer: sel = 00 -> a, 01 -> b, 10 -> c, 11 -> d
 CHIP Mux4Way {
-    IN a[4], b[4];
-    OUT sel;
+    IN a, b, c, d, sel[2];
+    OUT out;
 
     PARTS:
-    And(a=a, b=b, out=out);
-    Mux(a=a[0], b=b[1], sel=0, out=1);
-    Mux(a=a[0], b=b[0], sel=0, out=1);
-    Mux(a=a[1], b=b[0], sel=1, out=0);
-    Mux(a=a[1], b=b[1], sel=1, out=0);
+    Mux2Way(a=a, b=b, sel=sel[0], out=ab);
+    Mux2Way(a=c, b=d, sel=sel[0], out=cd);
+    Mux2Way(a=ab, b=cd, sel=sel[1], out=out);
 }

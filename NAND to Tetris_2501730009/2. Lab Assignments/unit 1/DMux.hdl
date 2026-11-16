@@ -1,7 +1,10 @@
+// 2-way demultiplexer: if sel = 0, a = in and b = 0; if sel = 1, b = in and a = 0
 CHIP DMux {
-    IN in;
+    IN in, sel;
     OUT a, b;
 
     PARTS:
-    Not(a=0, b=notb,);
+    Not(in=sel, out=notsel);
+    And(a=in, b=notsel, out=a);
+    And(a=in, b=sel, out=b);
 }

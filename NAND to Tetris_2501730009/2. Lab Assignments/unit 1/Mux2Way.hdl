@@ -1,9 +1,11 @@
+// 2-way multiplexer: out = a if sel = 0, out = b if sel = 1
 CHIP Mux2Way {
-    IN a[2], b[2];
-    OUT sel;
+    IN a, b, sel;
+    OUT out;
 
     PARTS:
-    And(a=a, b=b, out=out);
-    Mux(a=a, b=b, sel=0, out=1);
-    Mux(a=a, b=b, sel=1, out=0);
+    Not(in=sel, out=notsel);
+    And(a=a, b=notsel, out=w1);
+    And(a=b, b=sel, out=w2);
+    Or(a=w1, b=w2, out=out);
 }
