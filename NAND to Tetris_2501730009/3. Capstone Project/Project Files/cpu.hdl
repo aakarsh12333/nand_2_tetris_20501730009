@@ -1,0 +1,27 @@
+CHIP CPU {
+    IN inM[16], instruction[16], reset;
+    OUT outM[16], writeM, addressM[15], pc[15];
+    PARTS:
+    Not(in=instruction[15], out=isA);
+    Not(in=isA, out=isC);
+    Mux16(a=instruction, b=aluOut, sel=isC, out=aIn);
+    Or(a=isA, b=instruction[5], out=loadA);          // A-instr, or C-instr with dest A
+    ARegister(in=aIn, load=loadA, out=aOut, out[0..14]=addressM);
+    Mux16(a=aOut, b=inM, sel=instruction[12], out=y); // a-bit: A or M
+    And(a=isC, b=instruction[4], out=loadD);
+    DRegister(in=aluOut, load=loadD, out=dOut);
+    ALU(x=dOut, y=y, zx=instruction[11], nx=instruction[10], zy=instruction[9],
+        ny=instruction[8], f=instruction[7], no=instruction[6],
+        out=aluOut, out=outM, zr=zr, ng=ng);
+    And(a=isC, b=instruction[3], out=writeM);
+    // jump logic
+    Or(a=zr, b=ng, out=notPos);
+    Not(in=notPos, out=pos);
+    And(a=instruction[0], b=pos, out=j1);
+    And(a=instruction[1], b=zr, out=j2);
+    And(a=instruction[2], b=ng, out=j3);
+    Or(a=j1, b=j2, out=j12);
+    Or(a=j12, b=j3, out=jmp);
+    And(a=isC, b=jmp, out=doJump);
+    PC(in=aOut, load=doJump, inc=true, reset=reset, out[0..14]=pc);
+}

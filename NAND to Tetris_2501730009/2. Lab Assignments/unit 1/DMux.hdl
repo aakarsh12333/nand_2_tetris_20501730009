@@ -1,0 +1,7 @@
+CHIP DMux {
+    IN in;
+    OUT a, b;
+
+    PARTS:
+    Not(a=0, b=notb,);
+}

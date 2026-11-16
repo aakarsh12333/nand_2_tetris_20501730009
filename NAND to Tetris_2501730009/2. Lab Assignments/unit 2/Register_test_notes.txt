@@ -1,0 +1,22 @@
+Test Script (Register.txt) - demonstrating read/write operation for three sample inputs
+
+Cycle 0: Initialize with load = 0 (read initial state)
+  set in 0, load 0, tick, tock, output;
+
+Sample 1: Write +12345 (load=1)
+  set in 12345, set load 1, tick, tock, output;
+
+Read/Hold: Attempt to change 'in' with load=0 (value must remain 12345)
+  set in 9999, set load 0, tick, tock, output;
+
+Sample 2: Write -3210 (load=1)
+  set in -3210, set load 1, tick, tock, output;
+
+Read/Hold: Attempt to change 'in' with load=0 (value must remain -3210)
+  set in 0, set load 0, tick, tock, output;
+
+Sample 3: Write 255 (load=1)
+  set in 255, set load 1, tick, tock, output;
+
+Read/Hold: Maximum 255
+  set in 1000, set load 0, tick, tock, output;
